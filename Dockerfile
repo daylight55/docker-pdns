@@ -53,6 +53,11 @@ COPY assets/mysql/poweradmin.sql /poweradmin.sql
 RUN chown -R www-data:www-data /var/www/html/ \
 	&& chmod 644 /etc/powerdns/pdns.d/pdns.*
 
+RUN locale-gen ja_JP.UTF-8  
+ENV LANG ja_JP.UTF-8  
+ENV LANGUAGE ja_JP:en  
+ENV LC_ALL ja_JP.UTF-8
+
 ### SUPERVISOR ###
 COPY assets/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start.sh /start.sh
