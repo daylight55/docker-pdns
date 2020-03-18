@@ -1,0 +1,32 @@
+version: "2"
+services:
+  pdns:
+    build: 
+      context: .
+      dockerfile: arm64.Dockerfile
+    image: pdns-server
+    ports:
+    - "53:53"
+    - "53:53/udp"
+    - "8080:80"
+    environment:
+    - PDNS_ALLOW_AXFR_IPS=127.0.0.1
+    - PDNS_DISTRIBUTOR_THREADS=3
+    - PDNS_CACHE_TTL=20
+    - PDNS_RECURSIVE_CACHE_TTL=10
+    - DB_ENV_MYSQL_ROOT_PASSWORD=changeme
+  db:
+    image: mysql/mysql-server:8.0.19-aarch64
+    environment:
+    - MYSQL_ROOT_PASSWORD=changeme
+  adminer:
+    image: adminer
+    container_name: mysql-adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      powerdns-admin-mysql:
+        condition: service_healthy
+      pdns-mysql:
+        condition: service_healthy

@@ -1,6 +1,8 @@
 FROM arm64v8/ubuntu:xenial
 MAINTAINER daylight55
 
+ENV DEBIAN_FRONTEND noninteractive
+
 COPY assets/apt/preferences.d/pdns /etc/apt/preferences.d/pdns
 RUN apt-get update && apt-get install -y curl sudo \
 	&& curl https://repo.powerdns.com/FD380FBB-pub.asc | sudo apt-key add - \
@@ -53,10 +55,11 @@ COPY assets/mysql/poweradmin.sql /poweradmin.sql
 RUN chown -R www-data:www-data /var/www/html/ \
 	&& chmod 644 /etc/powerdns/pdns.d/pdns.*
 
-RUN locale-gen ja_JP.UTF-8  
-ENV LANG ja_JP.UTF-8  
-ENV LANGUAGE ja_JP:en  
-ENV LC_ALL ja_JP.UTF-8
+#RUN apt-get install -y language-pack-ja-base language-pack-ja
+#RUN locale-gen ja_JP.UTF-8  
+#ENV LANG ja_JP.UTF-8  
+#ENV LANGUAGE ja_JP:en  
+#ENV LC_ALL ja_JP.UTF-8
 
 ### SUPERVISOR ###
 COPY assets/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
